@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { View, Image, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
-import * as ImagePicker from 'expo-image-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
 
+<<<<<<< HEAD
 // SKAKDKSAMKLODNALNSDLKNASLKDN
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
+=======
+>>>>>>> a059af2254d9768824955ce5c49cfb4b646a9050
 export default function App() {
   return (
     <View style={styles.container}>
