@@ -22,3 +22,6 @@ const styles = StyleSheet.create({
 
 //Hola a todos
 //Me la suda (solo es un ejemplo para visualizar cambios)
+//No lo sé
+
+//Cambio de ejemplo
