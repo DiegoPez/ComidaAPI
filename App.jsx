@@ -18,3 +18,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+//Hola a todos
+//Me la suda (solo es un ejemplo para visualizar cambios)
