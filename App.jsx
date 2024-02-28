@@ -21,6 +21,7 @@ export default function App() {
   // DEFINIR VARIABLES
   const [recetasData, setRecetasData] = useState(null);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   API_KEY = "f0ee95f9076a471f9a7957b95742af3a"
 
@@ -30,7 +31,7 @@ export default function App() {
     try {
       const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=apples,+flour,+sugar&number=2`);
       const data = await response.json();
-      const [searchTerm, setSearchTerm] = useState('');
+      
 
       console.log(data);
       if (data.error) {
@@ -43,18 +44,39 @@ export default function App() {
     }
   };
 
+  const getIngredients = async () => {
+    try {
+      const response = await fetch(`https://api.spoonacular.com/food/ingredients/autocomplete?query=${searchTerm}`);
+      const data = await response.json();
+      console.log(data);
+      if (data.error) {
+        setError(data.error.message);
+      } else {
+        // Update searchTerm state variable instead of recetasData
+        setSearchTerm(data); // Assuming data contains the ingredients suggestions
+      }
+    } catch (err) {
+      setError('Error finding Ingredient data');
+    }
+  };
+
   // RETORNO DE LA VISTA
   return (
-    <View style={styles.container}>
-      <SearchBar
-      placeholder="Search recipes..."
-      onChangeText={setSearchTerm}
-      value={searchTerm}
-      />
+
+      <View style={styles.container}>
+      
 
       <TouchableOpacity style={styles.button} onPress={getRecipes}>
       <Text style={styles.buttonText}>Get recipes</Text>
       </TouchableOpacity>
+
+      <SearchBar 
+      style={styles.SearchBar}
+      placeholder="Search recipes..."
+      onChangeText={(text) => setSearchTerm(text) && getIngredientes(text)} // Call getIngredientes on each change
+      value={searchTerm}
+      />
+      
 
       <ScrollView>
       {error && <Text>{error}</Text>}
@@ -100,5 +122,11 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: 'cover', // Ajusta la imagen para que cubra toda su área
     borderRadius: 5,
+  },
+  SearchBar: {
+    width: "100%",
+    padding: 20,
+    borderRadius: 5
   }
+  
 });
