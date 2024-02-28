@@ -12,6 +12,7 @@ git push
 // IMPORTACIONES	
 import React, { useState } from "react";
 import { View, Image, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import SearchBar from 'react-native-searchbar'; 
 
 // CODIGO
 export default function App() {
@@ -26,8 +27,10 @@ export default function App() {
 
   const getRecipes = async () => {
     try {
-      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&query=pasta&maxFat=25&number=2`);
+      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&query=pasta&maxFat=25&number=9`);
       const data = await response.json();
+      const [searchTerm, setSearchTerm] = useState('');
+
       console.log(data);
       if (data.error) {
         setError(data.error.message);
@@ -42,7 +45,11 @@ export default function App() {
   // RETORNO DE LA VISTA
   return (
     <View style={styles.container}>
-
+      <SearchBar
+      placeholder="Search recipes..."
+      onChangeText={setSearchTerm}
+      value={searchTerm}
+      />
 
       <TouchableOpacity style={styles.button} onPress={getRecipes}>
       <Text style={styles.buttonText}>Get recipes</Text>
