@@ -1,3 +1,13 @@
+/* COMANDOS
+git branch Ver en que rama estas
+git checkout Cambiar de rama
+
+
+PARA SUBIR
+git add .
+git commit -m "Mensaje"
+git push
+*/
 // IMPORTACIONES	
 import React, { useState } from "react";
 import { View, Image, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
