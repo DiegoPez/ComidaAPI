@@ -13,16 +13,12 @@ git push
 import React, { useState } from "react";
 import { View, Image, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 
-// CODIGO
-export default function App() {
+const App = () => {
 
-  // DEFINIR VARIABLES
   const [recetasData, setRecetasData] = useState(null);
   const [error, setError] = useState(null);
 
-  API_KEY = "f0ee95f9076a471f9a7957b95742af3a"
-
-  // DEFINIR FUNCIONES
+  const API_KEY = "f0ee95f9076a471f9a7957b95742af3a";
 
   const getRecipes = async () => {
     try {
@@ -39,37 +35,31 @@ export default function App() {
     }
   };
 
-  // RETORNO DE LA VISTA
   return (
     <View style={styles.container}>
-
-
       <TouchableOpacity style={styles.button} onPress={getRecipes}>
-      <Text style={styles.buttonText}>Get recipes</Text>
+        <Text style={styles.buttonText}>Get recipes</Text>
       </TouchableOpacity>
-
       <ScrollView>
-      {error && <Text>{error}</Text>}
-      {recetasData && (
-
+        {error && <Text>{error}</Text>}
+        {recetasData && (
           <View>
             <Text>{recetasData.results[0].title}</Text>
-
-           <Image
-           style={styles.recetaImage}
-           source={{uri: recetasData.results[0].image}  }
-           />
-
+            <Image
+              style={styles.recetaImage}
+              source={{ uri: recetasData.results[0].image }}
+            />
+            <Text>Ingredientes:</Text>
+            {recetasData.results[0].ingredients.map((ingredient) => (
+              <Text key={ingredient.id} style={styles.ingrediente}>{ingredient.name}</Text>
+            ))}
           </View>
         )}
-      {error && <Text>{error}</Text>}
       </ScrollView>
-
     </View>
   );
-}
+};
 
-// ESTILOS
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -92,5 +82,11 @@ const styles = StyleSheet.create({
   recetaImage: {
     width: "100%",
     height: 200
-  }
+  },
+  ingrediente: {
+    fontSize: 16,
+    padding: 5,
+  },
 });
+
+export default App;
