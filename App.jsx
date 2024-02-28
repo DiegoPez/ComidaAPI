@@ -7,7 +7,7 @@ export default function App() {
   // DEFINIR VARIABLES
   const [recetasData, setRecetasData] = useState(null);
   const [error, setError] = useState(null);
-  const API_KEY = "f0ee95f9076a471f9a7957b95742af3a"; // Declarar API_KEY correctamente
+  const API_KEY = "f0ee95f9076a471f9a7957b95742af3a"; 
 
   // DEFINIR FUNCIONES
   const getIngr = async () => {
