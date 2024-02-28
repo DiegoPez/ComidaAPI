@@ -11,8 +11,9 @@ git commit -m "Mensaje"
 git push
 */
 // IMPORTACIONES	
-import React, { useState } from "react";
-import { View, Image, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import React, {useState, useEffect} from "react";
+import { View, Image, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+
 
 // CODIGO
 export default function App() {
@@ -25,15 +26,20 @@ export default function App() {
 
   // DEFINIR FUNCIONES
 
+  const GABO = (id) => {
+    console.log("GABO");
+    console.log(id);
+  }
+
   const getRecipes = async () => {
     try {
       const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=apples,+flour,+sugar&number=2`);
       const data = await response.json();
-      console.log(data);
       if (data.error) {
         setError(data.error.message);
       } else {
         setRecetasData(data);
+        console.log(data);
       }
     } catch (err) {
       setError('Error finding recetas data');
@@ -44,25 +50,26 @@ export default function App() {
   return (
     <View style={styles.container}>
 
+      <Text style = {styles.title}>Recetas</Text>
 
       <TouchableOpacity style={styles.button} onPress={getRecipes}>
       <Text style={styles.buttonText}>Get recipes</Text>
       </TouchableOpacity>
 
-      <ScrollView>
+      <ScrollView style={styles.recetas}>
       {error && <Text>{error}</Text>}
-      {recetasData && (
-
-          <View>
-           <Image
-           style={styles.recetaImage}
-           source={{uri: recetasData[0].image}  }
-           />
-
-          </View>
-        )}
-      {error && <Text>{error}</Text>}
-      </ScrollView>
+      {recetasData && recetasData.map((receta, index) => (
+        <TouchableOpacity style={styles.recetaContainer} key={index} onPress={() => GABO(receta.id)}>
+        <View key={index}>
+          <Image
+            style={styles.recetaImage}
+            source={{ uri: receta.image }}
+          />
+          <Text style={styles.recetaTitle}>{receta.title}</Text>
+        </View>
+        </TouchableOpacity>
+      ))}
+    </ScrollView>
 
     </View>
   );
@@ -78,6 +85,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
+  title: {
+    paddingTop: 50,
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20
+  }, 
+  recetas: {
+    width: "100%",
+    padding: 20,
+    margin: 20,
+  },
   button: {
     backgroundColor: "blue",
     padding: 20,
@@ -88,10 +106,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20
   },
+  recetaContainer: {
+    alignItems: 'left',
+  },
   recetaImage: {
     width: 200,
     height: 200,
-    resizeMode: 'cover', // Ajusta la imagen para que cubra toda su área
+    resizeMode: 'cover',
     borderRadius: 5,
-  }
+  },
+  recetaTitle: {
+    marginTop: 10,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
