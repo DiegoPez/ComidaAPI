@@ -23,6 +23,8 @@ export default function App() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [ingredientes, setIngredientes] = useState([]);
+  const [instructions, setInstructions] = useState(null);
+
 
   const getRecipes = async () => {
     try {
@@ -32,7 +34,7 @@ export default function App() {
       const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=${ingredientString}&number=10`);
       const data = await response.json();
   
-      console.log(data);
+      //rconsole.log(data);
       if (data.error) {
         setError(data.error.message);
       } else {
@@ -83,6 +85,7 @@ export default function App() {
       } else {
         const ingredientes = data2.extendedIngredients;
         setIngredientesData(ingredientes);
+        setInstructions(data2.analyzedInstructions)
       }
     } catch (err) {
       setError('Error encontrando los ingredientes de la receta');
@@ -137,6 +140,7 @@ export default function App() {
         </View>
       )}
 
+
       <ScrollView style={styles.recetas} horizontal={true}>
             {error && <Text>{error}</Text>}
             {recetasData && recetasData.map((receta, index) => (
@@ -172,6 +176,15 @@ export default function App() {
               </View>
           ))}
       </ScrollView>
+
+      {instructions && (
+        <View style={styles.instructionsContainer}>
+          <Text style={styles.instructionsTitle}>Instrucciones:</Text>
+          {instructions[0].steps.map((step, index) => (
+            <Text key={index} style={styles.instructionStep}>{index + 1}. {step.step}</Text>
+          ))}
+        </View>
+      )}
 
     </View>
   );
@@ -268,5 +281,21 @@ const styles = StyleSheet.create({
   },
   ingredienteText: {
     fontSize: 16
-  }
+  },
+  instructionsContainer: {
+    margin: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  instructionsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  instructionStep: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
 });
