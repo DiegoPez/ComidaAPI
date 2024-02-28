@@ -40,6 +40,11 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100
+  },
+  gift : {
+    width: 100,
+    height: 100,
+    borderRadius: 50
   }
 });
 
