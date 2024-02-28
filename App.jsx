@@ -28,7 +28,7 @@ export default function App() {
       // Join ingredients into a comma-separated string with "+" in between
       const ingredientString = ingredientes.join(',+');
   
-      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientString}&number=4&apiKey=${API_KEY}`);
+      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientString}&number=10&apiKey=${API_KEY}`);
       const data = await response.json();
   
       console.log(data);
@@ -47,7 +47,6 @@ export default function App() {
       const response = await fetch(`https://api.spoonacular.com/food/ingredients/autocomplete?apiKey=${API_KEY}&query=${searchTerm}&number=3`);
       const data = await response.json();
 
-      console.log(data);
       if (data.error) {
         setError(data.error.message);
       } else {
@@ -118,20 +117,31 @@ export default function App() {
         </View>
       )}
 
-      
-      <ScrollView>
-      {error && <Text>{error}</Text>}
-      {recetasData && (
-
-          <View>
-           <Image
-           style={styles.recetaImage}
-           source={{uri: recetasData[0].image}  }
-           />
-
-          </View>
-        )}
-      {error && <Text>{error}</Text>}
+      <ScrollView style={styles.recetas} horizontal={true}>
+            {error && <Text>{error}</Text>}
+            {recetasData && recetasData.map((receta, index) => (
+              <View style={styles.recetaContainer} key={index}>
+              <View style={styles.recetaContent}>
+                <TouchableOpacity onPress={() => getIngr(receta.id)}>
+                <Image
+                  style={styles.recetaImage}
+                  source={{ uri: receta.image }}
+                />
+                </TouchableOpacity>
+                <View style={styles.recetaDetails}>
+                  <TouchableOpacity onPress={() => getIngr(receta.id)}>
+                  <Text style={styles.recetaTitle}>{receta.title}</Text>
+                  </TouchableOpacity>
+                  <ScrollView>
+                  <Text style={styles.recetaIngredientsTitle}>Ingredientes faltantes:</Text>
+                  {receta.missedIngredients.map((ingrediente, ingredienteIndex) => (
+                    <Text key={ingredienteIndex} style={styles.recetaIngredients}>{ingrediente.original}</Text>
+                  ))}
+                  </ScrollView>
+                </View>
+            </View>
+            </View>
+      ))}
       </ScrollView>
 
     </View>
