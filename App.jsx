@@ -1,6 +1,7 @@
 /* COMANDOS
 git branch     --Ver en que rama estas
 git checkout     --Cambiar de rama
+
 git merge nombredelarama     --Unir ramas ESTANDO EN LA RAMA A LA QUE VAS A METER LOS CAMBIOS SELECCIONAS DE LA QUE LOS VAS A SACAR
 git pull
 
@@ -22,7 +23,7 @@ const App = () => {
 
   const getRecipes = async () => {
     try {
-      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&query=pasta&maxFat=25&number=2`);
+      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=apples,+flour,+sugar&number=2`);
       const data = await response.json();
       console.log(data);
       if (data.error) {
@@ -44,6 +45,7 @@ const App = () => {
         {error && <Text>{error}</Text>}
         {recetasData && (
           <View>
+<<<<<<< HEAD
             <Text>{recetasData.results[0].title}</Text>
             <Image
               style={styles.recetaImage}
@@ -53,6 +55,13 @@ const App = () => {
             {recetasData.results[0].ingredients.map((ingredient) => (
               <Text key={ingredient.id} style={styles.ingrediente}>{ingredient.name}</Text>
             ))}
+=======
+           <Image
+           style={styles.recetaImage}
+           source={{uri: recetasData[0].image}  }
+           />
+
+>>>>>>> PatryckRama
           </View>
         )}
       </ScrollView>
@@ -80,6 +89,7 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   recetaImage: {
+<<<<<<< HEAD
     width: "100%",
     height: 200
   },
@@ -90,3 +100,11 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+=======
+    width: 200,
+    height: 200,
+    resizeMode: 'cover', // Ajusta la imagen para que cubra toda su área
+    borderRadius: 5,
+  }
+});
+>>>>>>> PatryckRama
