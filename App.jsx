@@ -15,7 +15,7 @@ import React, { useState } from "react";
 import { View, Image, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from "react-native";
 import { Feather, Entypo } from '@expo/vector-icons';
 
-const API_KEY = "f0ee95f9a76a471f9a7957b95742af3a";
+const API_KEY = "0b2347a9c6674bc0bcdf869edf120a40";
 
 export default function App() {
   const [recetasData, setRecetasData] = useState(null);
@@ -25,7 +25,7 @@ export default function App() {
 
   const getRecipes = async () => {
     try {
-      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=<span class="math-inline">\{API\_KEY\}&ingredients\=</span>{ingredientes.join(',')}&number=2`);
+      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey={API_KEY}&ingredients`);
       const data = await response.json();
 
       console.log(data);
@@ -41,7 +41,7 @@ export default function App() {
 
   const getIngredients = async () => {
     try {
-      const response = await fetch(`https://api.spoonacular.com/food/ingredients/autocomplete?apiKey=<span class="math-inline">\{API\_KEY\}&query\=</span>{searchTerm}&number=3`);
+      const response = await fetch(`https://api.spoonacular.com/food/ingredients/autocomplete?apiKey=${API_KEY}&query=${searchTerm}&number=3`);
       const data = await response.json();
 
       console.log(data);
