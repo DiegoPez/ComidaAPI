@@ -25,9 +25,12 @@ export default function App() {
 
   const getRecipes = async () => {
     try {
-      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey={API_KEY}&ingredients`);
+      // Join ingredients into a comma-separated string with "+" in between
+      const ingredientString = ingredientes.join(',+');
+  
+      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientString}&number=4&apiKey=${API_KEY}`);
       const data = await response.json();
-
+  
       console.log(data);
       if (data.error) {
         setError(data.error.message);
