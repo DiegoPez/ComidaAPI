@@ -1,1 +1,2 @@
-Gay el que lo lea
+
+Cómo se borra estos?
