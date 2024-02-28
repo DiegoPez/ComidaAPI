@@ -59,21 +59,27 @@ export default function App() {
       <ScrollView style={styles.recetas}>
       {error && <Text>{error}</Text>}
       {recetasData && recetasData.map((receta, index) => (
-        <TouchableOpacity style={styles.recetaContainer} key={index} onPress={() => GABO(receta.id)}>
-          <View style={styles.recetaContent}>
-            <Image
-              style={styles.recetaImage}
-              source={{ uri: receta.image }}
-            />
-            <View style={styles.recetaDetails}>
-              <Text style={styles.recetaTitle}>{receta.title}</Text>
-              <Text style={styles.recetaIngredientsTitle}>Ingredientes faltantes:</Text>
-              {receta.missedIngredients.map((ingrediente, ingredienteIndex) => (
-                <Text key={ingredienteIndex} style={styles.recetaIngredients}>{ingrediente.original}</Text>
-              ))}
-            </View>
+        <View style={styles.recetaContainer} key={index}>
+        <View style={styles.recetaContent}>
+          <TouchableOpacity onPress={() => GABO(receta.id)}>
+          <Image
+            style={styles.recetaImage}
+            source={{ uri: receta.image }}
+          />
+          </TouchableOpacity>
+          <View style={styles.recetaDetails}>
+            <TouchableOpacity onPress={() => GABO(receta.id)}>
+            <Text style={styles.recetaTitle}>{receta.title}</Text>
+            </TouchableOpacity>
+            <ScrollView style={styles.recetaIngredientesfaltantes}>
+            <Text style={styles.recetaIngredientsTitle}>Ingredientes faltantes:</Text>
+            {receta.missedIngredients.map((ingrediente, ingredienteIndex) => (
+              <Text key={ingredienteIndex} style={styles.recetaIngredients}>{ingrediente.original}</Text>
+            ))}
+            </ScrollView>
           </View>
-        </TouchableOpacity>
+        </View>
+        </View>
       ))}
       </ScrollView>
 
@@ -100,7 +106,6 @@ const styles = StyleSheet.create({
   recetas: {
     width: "100%",
     padding: 20,
-    margin: 20,
   },
   button: {
     backgroundColor: "blue",
@@ -113,17 +118,36 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   recetaContainer: {
-    alignItems: 'left',
+    marginBottom: 200,
+    height: 10,
+  },
+  recetaContent: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   recetaImage: {
     width: 200,
     height: 200,
     resizeMode: 'cover',
     borderRadius: 5,
+    marginRight: 20,
+  },
+  recetaDetails: {
+    flex: 1,
   },
   recetaTitle: {
-    marginTop: 10,
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  recetaIngredientsTitle: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  recetaIngredients: {
+    fontSize: 16,
+  },
+  recetaIngredientesfaltantes: {
+    
   },
 });
