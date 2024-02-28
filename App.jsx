@@ -60,16 +60,22 @@ export default function App() {
       {error && <Text>{error}</Text>}
       {recetasData && recetasData.map((receta, index) => (
         <TouchableOpacity style={styles.recetaContainer} key={index} onPress={() => GABO(receta.id)}>
-        <View key={index}>
-          <Image
-            style={styles.recetaImage}
-            source={{ uri: receta.image }}
-          />
-          <Text style={styles.recetaTitle}>{receta.title}</Text>
-        </View>
+          <View style={styles.recetaContent}>
+            <Image
+              style={styles.recetaImage}
+              source={{ uri: receta.image }}
+            />
+            <View style={styles.recetaDetails}>
+              <Text style={styles.recetaTitle}>{receta.title}</Text>
+              <Text style={styles.recetaIngredientsTitle}>Ingredientes faltantes:</Text>
+              {receta.missedIngredients.map((ingrediente, ingredienteIndex) => (
+                <Text key={ingredienteIndex} style={styles.recetaIngredients}>{ingrediente.original}</Text>
+              ))}
+            </View>
+          </View>
         </TouchableOpacity>
       ))}
-    </ScrollView>
+      </ScrollView>
 
     </View>
   );
