@@ -80,7 +80,7 @@ export default function App() {
             <TouchableOpacity onPress={() => getIngr(receta.id)}>
             <Text style={styles.recetaTitle}>{receta.title}</Text>
             </TouchableOpacity>
-            <ScrollView style={styles.recetaIngredientesfaltantes}>
+            <ScrollView>
             <Text style={styles.recetaIngredientsTitle}>Ingredientes faltantes:</Text>
             {receta.missedIngredients.map((ingrediente, ingredienteIndex) => (
               <Text key={ingredienteIndex} style={styles.recetaIngredients}>{ingrediente.original}</Text>
@@ -119,8 +119,9 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   }, 
   recetas: {
-    width: "100%",
+    width: "95%",
     padding: 20,
+    height: 120,
   },
   button: {
     backgroundColor: "blue",
@@ -162,9 +163,6 @@ const styles = StyleSheet.create({
   },
   recetaIngredients: {
     fontSize: 16,
-  },
-  recetaIngredientesfaltantes: {
-    
   },
   ingredienteContainer: {
     padding: 10,
