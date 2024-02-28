@@ -23,6 +23,8 @@ export default function App() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [ingredientes, setIngredientes] = useState([]);
+  const [instructions, setInstructions] = useState(null);
+
 
   const getRecipes = async () => {
     try {
@@ -32,7 +34,7 @@ export default function App() {
       const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=${ingredientString}&number=10`);
       const data = await response.json();
 
-      console.log(data);
+      //console.log(data);
       if (data.error) {
         setError(data.error.message);
       } else {
@@ -88,6 +90,7 @@ export default function App() {
       } else {
         const ingredientes = data2.extendedIngredients;
         setIngredientesData(ingredientes);
+        setInstructions(data2.analyzedInstructions)
       }
     } catch (err) {
       setError('Error encontrando los ingredientes de la receta');
@@ -125,21 +128,32 @@ export default function App() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.View_SeleccioneIngrediente}>
-          {searchTerm && typeof searchTerm === 'object' && searchTerm.length > 0 && (
-            <View style={styles.ingredientList}>
-              {searchTerm.map((name, index) => (
-                <TouchableOpacity key={index} style={styles.ingredientOption} onPress={() => handleIngredientSelect(name)}>
-                  <Text style={styles.ingredientItemName}>[  ] {name}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-      </View>
+      <Text style={styles.selectedIngredient}>Seleccione el ingrediente deseado: </Text>
+      {searchTerm && typeof searchTerm === 'object' && searchTerm.length > 0 && (
+        <View style={styles.ingredientList}>
+          {searchTerm.map((name, index) => (
+            <TouchableOpacity key={index} style={styles.ingredientOption} onPress={() => handleIngredientSelect(name)}>
+              <Text style={styles.ingredientItemName}>{name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
 
-      <TouchableOpacity style={styles.button_Getrecipies} onPress={getRecipes}>
-        <Text style={styles.button_Getrecipies_Text}>Get recipes</Text>
-      </TouchableOpacity>
+      <Text style={styles.selectedIngredient}>Ingredientes seleccionados: </Text>
+      {ingredientes.length > 0 && (
+        <View style={styles.ingredientList}>
+          {ingredientes.map((name, index) => (
+            <View key={index} style={styles.ingredientItem}>
+              <View style={styles.searchRow}>
+                <Text style={styles.ingredientItemName}>{name}</Text>
+                <TouchableOpacity style={styles.removeButton} onPress={() => handleIngredientRemoval(name)}>
+                  <Feather name="x" size={24} color="red" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
 
       <ScrollView style={styles.recetas} horizontal={true}>
         {error && <Text>{error}</Text>}
@@ -176,8 +190,18 @@ export default function App() {
           </View>
         ))}
       </ScrollView>
-    </ScrollView>
 
+
+      {instructions && (
+        <View style={styles.instructionsContainer}>
+          <Text style={styles.instructionsTitle}>Instrucciones:</Text>
+          {instructions[0].steps.map((step, index) => (
+            <Text key={index} style={styles.instructionStep}>{index + 1}. {step.step}</Text>
+          ))}
+        </View>
+      )}
+
+    </ScrollView>
   );
 }
 
@@ -251,8 +275,22 @@ const styles = StyleSheet.create({
   ingredienteText: {
     fontSize: 16
   },
-
-
+  instructionsContainer: {
+    margin: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  instructionsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  instructionStep: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
   // LISTA INGREDIENTES SELECCIONADOS
   View_IngredientesSeleccionados: {
     width: "90%",
