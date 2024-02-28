@@ -1,7 +1,8 @@
 /* COMANDOS
-git branch Ver en que rama estas
-git checkout Cambiar de rama
-
+git branch     --Ver en que rama estas
+git checkout     --Cambiar de rama
+git merge nombredelarama     --Unir ramas ESTANDO EN LA RAMA A LA QUE VAS A METER LOS CAMBIOS SELECCIONAS DE LA QUE LOS VAS A SACAR
+git pull
 
 PARA SUBIR
 git add .
