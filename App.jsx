@@ -27,7 +27,7 @@ export default function App() {
 
   const getRecipes = async () => {
     try {
-      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=apples`);
+      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=apple`);
       const data = await response.json();
       if (data.error) {
         setError(data.error.message);
