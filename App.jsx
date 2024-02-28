@@ -1,6 +1,7 @@
 /* COMANDOS
 git branch     --Ver en que rama estas
 git checkout     --Cambiar de rama
+
 git merge nombredelarama     --Unir ramas ESTANDO EN LA RAMA A LA QUE VAS A METER LOS CAMBIOS SELECCIONAS DE LA QUE LOS VAS A SACAR
 git pull
 
@@ -26,7 +27,7 @@ export default function App() {
 
   const getRecipes = async () => {
     try {
-      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&query=pasta&maxFat=25&number=2`);
+      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=apples,+flour,+sugar&number=2`);
       const data = await response.json();
       console.log(data);
       if (data.error) {
@@ -53,11 +54,9 @@ export default function App() {
       {recetasData && (
 
           <View>
-            <Text>{recetasData.results[0].title}</Text>
-
            <Image
            style={styles.recetaImage}
-           source={{uri: recetasData.results[0].image}  }
+           source={{uri: recetasData[0].image}  }
            />
 
           </View>
@@ -90,7 +89,9 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   recetaImage: {
-    width: "100%",
-    height: 200
+    width: 200,
+    height: 200,
+    resizeMode: 'cover', // Ajusta la imagen para que cubra toda su área
+    borderRadius: 5,
   }
 });
