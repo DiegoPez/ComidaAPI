@@ -128,32 +128,21 @@ export default function App() {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.selectedIngredient}>Seleccione el ingrediente deseado: </Text>
-      {searchTerm && typeof searchTerm === 'object' && searchTerm.length > 0 && (
-        <View style={styles.ingredientList}>
-          {searchTerm.map((name, index) => (
-            <TouchableOpacity key={index} style={styles.ingredientOption} onPress={() => handleIngredientSelect(name)}>
-              <Text style={styles.ingredientItemName}>{name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-
-      <Text style={styles.selectedIngredient}>Ingredientes seleccionados: </Text>
-      {ingredientes.length > 0 && (
-        <View style={styles.ingredientList}>
-          {ingredientes.map((name, index) => (
-            <View key={index} style={styles.ingredientItem}>
-              <View style={styles.searchRow}>
-                <Text style={styles.ingredientItemName}>{name}</Text>
-                <TouchableOpacity style={styles.removeButton} onPress={() => handleIngredientRemoval(name)}>
-                  <Feather name="x" size={24} color="red" />
+      <View style={styles.View_SeleccioneIngrediente}>
+          {searchTerm && typeof searchTerm === 'object' && searchTerm.length > 0 && (
+            <View style={styles.ingredientList}>
+              {searchTerm.map((name, index) => (
+                <TouchableOpacity key={index} style={styles.ingredientOption} onPress={() => handleIngredientSelect(name)}>
+                  <Text style={styles.ingredientItemName}>[  ] {name}</Text>
                 </TouchableOpacity>
-              </View>
+              ))}
             </View>
-          ))}
-        </View>
-      )}
+          )}
+      </View>
+
+      <TouchableOpacity style={styles.button_Getrecipies} onPress={getRecipes}>
+        <Text style={styles.button_Getrecipies_Text}>Get recipes</Text>
+      </TouchableOpacity>
 
       <ScrollView style={styles.recetas} horizontal={true}>
         {error && <Text>{error}</Text>}
