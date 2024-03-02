@@ -25,9 +25,8 @@ export default function App() {
 
   const getRecipes = async () => {
     try {
-      // Join ingredients into a comma-separated string with "+" in between
+      
       const ingredientString = ingredientes.join(',+');
-  
       const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientString}&number=10&apiKey=${API_KEY}`);
       const data = await response.json();
   
@@ -50,10 +49,8 @@ export default function App() {
       if (data.error) {
         setError(data.error.message);
       } else {
-        // Extract names from each item (assuming data contains an array of items)
+       
         const ingredientNames = data.map(item => item.name);
-
-        // Update searchTerm with the extracted names
         setSearchTerm(ingredientNames);
       }
     } catch (err) {
@@ -62,7 +59,7 @@ export default function App() {
   };
 
   const handleIngredientSelect = (newIngredient) => {
-    // Prevent duplicates and update state efficiently
+    
     if (!ingredientes.includes(newIngredient)) {
       setIngredientes(prevIngredientes => [...prevIngredientes, newIngredient]);
     }
@@ -79,12 +76,12 @@ export default function App() {
       </TouchableOpacity>
 
       <View style={styles.searchRow}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Buscar Ingredientes..."
-          onChangeText={setSearchTerm}
-          value={searchTerm}
-        />
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Buscar Ingredientes..."
+        onChangeText={setSearchTerm} 
+        onSubmitEditing={SubmitBuscar}
+      />
         <TouchableOpacity style={styles.button} onPress={getIngredients}>
           <Text style={styles.buttonText}>Buscar</Text>
         </TouchableOpacity>
