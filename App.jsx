@@ -114,7 +114,7 @@ export default function App() {
       <TextInput
         style={styles.searchInput}
         placeholder="Buscar Ingredientes..."
-        onChangeText={setSearchTerm} // Update `searchTerm` on user input
+        onChangeText={setSearchTerm} 
         onSubmitEditing={SubmitBuscar}
       />
         <TouchableOpacity style={styles.button} onPress={getIngredients}>
