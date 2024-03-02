@@ -79,7 +79,7 @@ export default function App() {
     try {
       const response2 = await fetch(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}&includeNutrition=false`);
       const data2 = await response2.json();
-      //console.log(data2);
+      
       if (data2.error) {
         setError(data2.error.message);
       } else {
