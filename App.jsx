@@ -23,15 +23,16 @@ export default function App() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [ingredientes, setIngredientes] = useState([]);
+  const [instructions, setInstructions] = useState(null);
+
 
   const getRecipes = async () => {
     try {
-      
       const ingredientString = ingredientes.join(',+');
-      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientString}&number=10&apiKey=${API_KEY}`);
+
+      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=${ingredientString}&number=10`);
       const data = await response.json();
-  
-      console.log(data);
+
       if (data.error) {
         setError(data.error.message);
       } else {
@@ -50,13 +51,17 @@ export default function App() {
       if (data.error) {
         setError(data.error.message);
       } else {
-       
+
         const ingredientNames = data.map(item => item.name);
         setSearchTerm(ingredientNames);
       }
     } catch (err) {
       setError('Error finding Ingredient data');
     }
+  };
+
+  const SubmitBuscar = () => {
+    getIngredients();
   };
 
   const handleIngredientSelect = (newIngredient) => {
@@ -80,6 +85,7 @@ export default function App() {
       } else {
         const ingredientes = data2.extendedIngredients;
         setIngredientesData(ingredientes);
+        setInstructions(data2.analyzedInstructions)
       }
     } catch (err) {
       setError('Error encontrando los ingredientes de la receta');
@@ -87,78 +93,76 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>ComidaAPI</Text>
 
-      <Text style = {styles.title}>Recetas</Text>
-
-      <TouchableOpacity style={styles.button} onPress={getRecipes}>
-        <Text style={styles.buttonText}>Get recipes</Text>
-      </TouchableOpacity>
+      <View style={styles.View_IngredientesSeleccionados}>
+        <Text style={styles.selectedIngredient}>Ingredientes seleccionados: </Text>
+        {ingredientes.length > 0 && (
+          <View style={styles.SelectedIngredientList}>
+            {ingredientes.map((name, index) => (
+              <TouchableOpacity key={index} style={styles.SelectedIngredientsRow} onPress={() => handleIngredientRemoval(name)}>
+                <Feather name="x" size={24} color="red" />
+                <Text style={styles.SelectedIngredientItemName}>{name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+      </View>
 
       <View style={styles.searchRow}>
       <TextInput
         style={styles.searchInput}
         placeholder="Buscar Ingredientes..."
-        onChangeText={setSearchTerm} 
+        onChangeText={setSearchTerm} // Update `searchTerm` on user input
         onSubmitEditing={SubmitBuscar}
       />
         <TouchableOpacity style={styles.button} onPress={getIngredients}>
-          <Text style={styles.buttonText}>Buscar</Text>
+          <Text style={styles.buttonText}>Buscar Ingrediente</Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.selectedIngredient}>Seleccione el ingrediente deseado: </Text>
-      {searchTerm && typeof searchTerm === 'object' && searchTerm.length > 0 && (
-        <View style={styles.ingredientList}>
-          {searchTerm.map((name, index) => (
-            <TouchableOpacity key={index} style={styles.ingredientOption} onPress={() => handleIngredientSelect(name)}>
-              <Text style={styles.ingredientItemName}>{name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-
-      <Text style={styles.selectedIngredient}>Ingredientes seleccionados: </Text>
-      {ingredientes.length > 0 && (
-        <View style={styles.ingredientList}>
-          {ingredientes.map((name, index) => (
-            <View key={index} style={styles.ingredientItem}>
-              <View style={styles.searchRow}>
-              <Text style={styles.ingredientItemName}>{name}</Text>
-              <TouchableOpacity style={styles.removeButton} onPress={() => handleIngredientRemoval(name)}>
-                <Feather name="x" size={24} color="red" />
-              </TouchableOpacity>
-              </View>
+      <View style={styles.View_SeleccioneIngrediente}>
+          {searchTerm && typeof searchTerm === 'object' && searchTerm.length > 0 && (
+            <View style={styles.ingredientList}>
+              {searchTerm.map((name, index) => (
+                <TouchableOpacity key={index} style={styles.ingredientOption} onPress={() => handleIngredientSelect(name)}>
+                  <Text style={styles.ingredientItemName}>[  ] {name}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
-          ))}
-        </View>
-      )}
+          )}
+      </View>
+
+      <TouchableOpacity style={styles.button_Getrecipies} onPress={getRecipes}>
+        <Text style={styles.button_Getrecipies_Text}>Get recipes</Text>
+      </TouchableOpacity>
 
       <ScrollView style={styles.recetas} horizontal={true}>
-            {error && <Text>{error}</Text>}
-            {recetasData && recetasData.map((receta, index) => (
-              <View style={styles.recetaContainer} key={index}>
-              <View style={styles.recetaContent}>
-                <TouchableOpacity onPress={() => getIngr(receta.id)}>
+        {error && <Text>{error}</Text>}
+        {recetasData && recetasData.map((receta, index) => (
+          <View style={styles.recetaContainer} key={index}>
+            <View style={styles.recetaContent}>
+              <TouchableOpacity onPress={() => getIngr(receta.id)}>
                 <Image
                   style={styles.recetaImage}
                   source={{ uri: receta.image }}
                 />
-                </TouchableOpacity>
-                <View style={styles.recetaDetails}>
-                  <TouchableOpacity onPress={() => getIngr(receta.id)}>
+              </TouchableOpacity>
+              <View style={styles.recetaDetails}>
+                <TouchableOpacity onPress={() => getIngr(receta.id)}>
                   <Text style={styles.recetaTitle}>{receta.title}</Text>
-                  </TouchableOpacity>
-                  <ScrollView>
+                </TouchableOpacity>
+                <ScrollView>
                   <Text style={styles.recetaIngredientsTitle}>Ingredientes faltantes:</Text>
                   {receta.missedIngredients.map((ingrediente, ingredienteIndex) => (
                     <Text key={ingredienteIndex} style={styles.recetaIngredients}>{ingrediente.original}</Text>
                   ))}
-                  </ScrollView>
-                </View>
+                </ScrollView>
+              </View>
             </View>
-            </View>
-      ))}
+          </View>
+        ))}
       </ScrollView>
 
       <ScrollView>
@@ -166,11 +170,21 @@ export default function App() {
         {ingredientesData && ingredientesData.map((ingrediente, index) => (
           <View key={index} style={styles.ingredienteContainer}>
             <Text style={styles.ingredienteText}>{ingrediente.original}</Text>
-              </View>
-          ))}
+          </View>
+        ))}
       </ScrollView>
 
-    </View>
+
+      {instructions && (
+        <View style={styles.instructionsContainer}>
+          <Text style={styles.instructionsTitle}>Instrucciones:</Text>
+          {instructions[0].steps.map((step, index) => (
+            <Text key={index} style={styles.instructionStep}>{index + 1}. {step.step}</Text>
+          ))}
+        </View>
+      )}
+
+    </ScrollView>
   );
 }
 
@@ -184,42 +198,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  button: {
-    backgroundColor: "blue",
-    padding: 20,
-    borderRadius: 5
-  },
   title: {
-    paddingTop: 50,
-    fontSize: 24,
+    paddingTop: 70,
+    fontSize: 50,
     fontWeight: "bold",
     paddingBottom: 20,
-  }, 
+  },
   recetas: {
     width: "95%",
     padding: 20,
-  },
-  searchRow: {
-    flexDirection: 'row', // Change to row for horizontal placement
-    alignItems: 'center',
-    justifyContent: 'space-between', // Distribute evenly
-    width: '100%' // Stretch to full width
   },
   buttonText: {
     color: "white",
     fontWeight: "bold",
     fontSize: 20
-  },
-  searchInput: {
-    width: "60%",
-    padding: 10,
-    borderRadius: 5,
-    borderColor: "#ccc",
-    borderWidth: 1,
-  },
-  ingredientList: {
-    marginTop: 20,
-    width: "70%",
   },
   buttonbusqueda: {
     backgroundColor: "blue",
@@ -265,5 +257,127 @@ const styles = StyleSheet.create({
   },
   ingredienteText: {
     fontSize: 16
-  }
+  },
+  instructionsContainer: {
+    margin: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  instructionsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  instructionStep: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  // LISTA INGREDIENTES SELECCIONADOS
+  View_IngredientesSeleccionados: {
+    width: "90%",
+    marginBottom: 20,
+    marginLeft: 10,
+  },
+  selectedIngredient: {
+    //Compartido con Seleccionar Ingredientes
+    fontStyle: 'italic',
+    fontSize: 15,
+    marginBottom: 10,
+    height: 20,
+  },
+  SelectedIngredientList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  ingredientItem: {
+  },
+  SelectedIngredientsRow: {
+    backgroundColor: 'lightgray',
+    flexDirection: 'row',
+    alignItems: "center",
+    paddingRight: 10,
+    padding: 5,
+    borderRadius: 5,
+    marginBottom: 5,
+    marginRight: 5,
+  },
+  removeButton: {
+  },
+  SelectedIngredientItemName: {
+  },
+
+
+  // BARRA DE BÚSQUEDA
+  searchRow: { //View del TextInput (Barra de Búsqueda)
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: "center",
+    marginLeft: 50,
+  },
+  searchInput: { //Barra de búsqueda
+    width: "60%",
+    height: 50,
+    padding: 10,
+    borderRadius: 5,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    textAlign: "left",
+    fontSize: 15,
+    marginRight: 10,
+  },
+
+
+  // BOTÓN DE BUSCAR INGREDIENTES
+  button: {
+    backgroundColor: '#007bff',
+    padding: 5,
+    borderRadius: 5,
+    maxWidth: 100,
+    height: 50,
+    justifyContent: "center",
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+
+
+  // LISTA SELECCIONAR INGREDIENTES
+  View_SeleccioneIngrediente: {
+    backgroundColor: '#F2F3F4',
+    width: "60%",
+    marginBottom: 20,
+    alignSelf: "left",
+    marginLeft: 25,
+  },
+  selectedIngredient: {
+    //Compartido con Seleccionados
+  },
+  ingredientList: {
+  },
+  ingredientOption: {
+    borderBottomWidth: 1,
+    borderBottomColor: "black",
+  },
+  ingredientItemName: {
+    padding: 15,   
+  },
+
+
+  //BOTÓN DE GET RECIPES
+  button_Getrecipies: {
+    //El mismo que el otro botón
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  button_Getrecipies_Text: {
+    //El mismo que el otro botón
+    color: '#fff',
+    fontSize: 16,
+  },
 });
