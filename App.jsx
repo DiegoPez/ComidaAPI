@@ -182,12 +182,12 @@ export default function App() {
 
 
       {instructions && (
-        <View style={styles.instructionsContainer}>
+        <ScrollView style={styles.instructionsContainer}>
           <Text style={styles.instructionsTitle}>Instrucciones:</Text>
           {instructions[0].steps.map((step, index) => (
             <Text key={index} style={styles.instructionStep}>{index + 1}. {step.step}</Text>
           ))}
-        </View>
+        </ScrollView>
       )}
 
     </ScrollView>
@@ -270,6 +270,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
+    maxHeight: 200,
   },
   instructionsTitle: {
     fontSize: 18,
