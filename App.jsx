@@ -19,6 +19,7 @@ const API_KEY = "0b2347a9c6674bc0bcdf869edf120a40";
 
 export default function App() {
   const [recetasData, setRecetasData] = useState(null);
+  const [ingredientesData, setIngredientesData] = useState(null);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [ingredientes, setIngredientes] = useState([]);
@@ -69,8 +70,27 @@ export default function App() {
     setIngredientes(prevIngredientes => prevIngredientes.filter(ingredient => ingredient !== ingredientToRemove));
   };
 
+  const getIngr = async (id) => {
+    try {
+      const response2 = await fetch(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}&includeNutrition=false`);
+      const data2 = await response2.json();
+      //console.log(data2);
+      if (data2.error) {
+        setError(data2.error.message);
+      } else {
+        const ingredientes = data2.extendedIngredients;
+        setIngredientesData(ingredientes);
+      }
+    } catch (err) {
+      setError('Error encontrando los ingredientes de la receta');
+    }
+  };
+
   return (
     <View style={styles.container}>
+
+      <Text style = {styles.title}>Recetas</Text>
+
       <TouchableOpacity style={styles.button} onPress={getRecipes}>
         <Text style={styles.buttonText}>Get recipes</Text>
       </TouchableOpacity>
@@ -141,6 +161,15 @@ export default function App() {
       ))}
       </ScrollView>
 
+      <ScrollView>
+        {error && <Text>{error}</Text>}
+        {ingredientesData && ingredientesData.map((ingrediente, index) => (
+          <View key={index} style={styles.ingredienteContainer}>
+            <Text style={styles.ingredienteText}>{ingrediente.original}</Text>
+              </View>
+          ))}
+      </ScrollView>
+
     </View>
   );
 }
@@ -160,6 +189,16 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5
   },
+  title: {
+    paddingTop: 50,
+    fontSize: 24,
+    fontWeight: "bold",
+    paddingBottom: 20,
+  }, 
+  recetas: {
+    width: "95%",
+    padding: 20,
+  },
   searchRow: {
     flexDirection: 'row', // Change to row for horizontal placement
     alignItems: 'center',
@@ -170,12 +209,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 20
-  },
-  recetaImage: {
-    width: 200,
-    height: 200,
-    resizeMode: 'cover', // Ajusta la imagen para que cubra toda su área
-    borderRadius: 5,
   },
   searchInput: {
     width: "60%",
@@ -194,6 +227,43 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 20,
   },
-    
-  
+  recetaContainer: {
+    marginBottom: 100,
+    height: 10,
+    marginRight: 20,
+  },
+  recetaContent: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  recetaImage: {
+    width: 200,
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 5,
+    marginRight: 20,
+  },
+  recetaDetails: {
+    flex: 1,
+  },
+  recetaTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  recetaIngredientsTitle: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  recetaIngredients: {
+    fontSize: 16,
+  },
+  ingredienteContainer: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc"
+  },
+  ingredienteText: {
+    fontSize: 16
+  }
 });
